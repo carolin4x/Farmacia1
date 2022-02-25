@@ -1,5 +1,6 @@
 package com.generation.farmacia.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -50,6 +51,27 @@ public class ProdutoController {
 	@GetMapping("/nome/{nome}")
 	public ResponseEntity<List<Produto>> getByNome (@PathVariable String nome) {
 		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(nome));
+	}
+	
+	@GetMapping("/nomelab/{nome}~{laboratorio}")
+	public ResponseEntity<List<Produto>> findByNomeLaboratorioProduto (@PathVariable String nome, @PathVariable String laboratorio){
+		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCaseAndLaboratorioContainingIgnoreCase(nome,laboratorio));
+	}
+	
+	@GetMapping("/maior/{preco}")
+	public ResponseEntity<List<Produto>> findByMaiorQue (@PathVariable BigDecimal preco){
+		return ResponseEntity.ok(produtoRepository.findAllByPrecoGreaterThanOrderByPreco(preco));
+	}
+	
+	
+	@GetMapping("/menor/{preco}")
+	public ResponseEntity<List<Produto>> findByMenorQue (@PathVariable BigDecimal preco){
+		return ResponseEntity.ok(produtoRepository.findAllByPrecoLessThanOrderByPreco(preco));
+	}
+	
+	@GetMapping("/entre/{preco1}~{preco2}")
+	public ResponseEntity<List<Produto>> findByEntre (@PathVariable BigDecimal preco1, @PathVariable BigDecimal preco2){
+		return ResponseEntity.ok(produtoRepository.findAllByPrecoBetweenOrderByPreco(preco1, preco2));
 	}
 
 	// no PostMapping eu passo o meu Objeto inteiro após o @RequestBody
